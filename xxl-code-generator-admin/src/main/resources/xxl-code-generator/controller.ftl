@@ -1,22 +1,25 @@
-import org.springframework.stereotype.Controller;
+package ${packagePath}.controller;
+
+import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Map;
+import ${packagePath}.service.${classInfo.className}Service;
+import ${packagePath}.model.${classInfo.className};
+import org.springframework.web.bind.annotation.RestController;
 
 /**
 * ${classInfo.classComment}
 *
-* Created by xuxueli on '${.now?string('yyyy-MM-dd HH:mm:ss')}'.
+* Created by gaoshijia on '${.now?string('yyyy-MM-dd HH:mm:ss')}'.
 */
-@Controller
-public class ConfController {
+@RestController
+@RequestMapping("/${classInfo.className?uncap_first}")
+public class ${classInfo.className}Controller {
 
-    @Resource
+    @Autowired
     private ${classInfo.className}Service ${classInfo.className?uncap_first}Service;
 
     /**
@@ -24,8 +27,8 @@ public class ConfController {
     */
     @RequestMapping("/insert")
     @ResponseBody
-    public ReturnT<String> insert(${classInfo.className} ${classInfo.className?uncap_first}){
-        return ${classInfo.className?uncap_first}Service.insert(${classInfo.className?uncap_first});
+    public void insert(${classInfo.className} ${classInfo.className?uncap_first}){
+        ${classInfo.className?uncap_first}Service.insert(${classInfo.className?uncap_first});
     }
 
     /**
@@ -33,8 +36,8 @@ public class ConfController {
     */
     @RequestMapping("/delete")
     @ResponseBody
-    public ReturnT<String> delete(int id){
-        return ${classInfo.className?uncap_first}Service.delete(id);
+    public void delete(${classInfo.idField.fieldClass} ${classInfo.idField.fieldName}){
+        ${classInfo.className?uncap_first}Service.delete(${classInfo.idField.fieldName});
     }
 
     /**
@@ -42,8 +45,8 @@ public class ConfController {
     */
     @RequestMapping("/update")
     @ResponseBody
-    public ReturnT<String> update(${classInfo.className} ${classInfo.className?uncap_first}){
-        return ${classInfo.className?uncap_first}Service.update(${classInfo.className?uncap_first});
+    public void update(${classInfo.className} ${classInfo.className?uncap_first}){
+        ${classInfo.className?uncap_first}Service.update(${classInfo.className?uncap_first});
     }
 
     /**
@@ -51,8 +54,8 @@ public class ConfController {
     */
     @RequestMapping("/load")
     @ResponseBody
-    public ReturnT<String> load(int id){
-        return ${classInfo.className?uncap_first}Service.load(id);
+    public ${classInfo.className} load(${classInfo.idField.fieldClass} ${classInfo.idField.fieldName}){
+        return ${classInfo.className?uncap_first}Service.load(${classInfo.idField.fieldName});
     }
 
     /**
@@ -60,7 +63,7 @@ public class ConfController {
     */
     @RequestMapping("/pageList")
     @ResponseBody
-    public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int offset,
+    public PageInfo<${classInfo.className}> pageList(@RequestParam(required = false, defaultValue = "0") int offset,
                                         @RequestParam(required = false, defaultValue = "10") int pagesize) {
         return ${classInfo.className?uncap_first}Service.pageList(offset, pagesize);
     }

@@ -62,6 +62,9 @@ public class TableParseUtil {
 
         String fieldListTmp = tableSql.substring(tableSql.indexOf("(")+1, tableSql.lastIndexOf(")"));
         String[] fieldLineList = fieldListTmp.split(",");
+
+        FieldInfo idField = new FieldInfo();
+        Map<String,FieldInfo> fieldMap = new HashMap<String,FieldInfo>();
         if (fieldLineList.length > 0) {
             for (String columnLine :fieldLineList) {
                 columnLine = columnLine.trim();		                                        // `userid` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户ID',
@@ -111,8 +114,14 @@ public class TableParseUtil {
                     fieldInfo.setFieldName(fieldName);
                     fieldInfo.setFieldClass(fieldClass);
                     fieldInfo.setFieldComment(fieldComment);
-
+                    fieldMap.put(columnName,fieldInfo);
                     fieldList.add(fieldInfo);
+                }
+                else if(columnLine.contains("PRIMARY KEY"))
+                {
+                    columnLine = columnLine.substring(columnLine.indexOf("`")+1);
+                    String columnName = columnLine.substring(0, columnLine.indexOf("`"));
+                    idField = fieldMap.get(columnName);
                 }
             }
         }
@@ -126,8 +135,31 @@ public class TableParseUtil {
         codeJavaInfo.setClassName(className);
         codeJavaInfo.setClassComment(classComment);
         codeJavaInfo.setFieldList(fieldList);
-
+        codeJavaInfo.setIdField(idField);
         return codeJavaInfo;
+    }
+
+    public static  void main(String[] args) throws IOException{
+        ClassInfo codeJavaInfo = TableParseUtil.processTableIntoClassInfo("CREATE TABLE `pc_task_manage_info` (\n" +
+                "  `n_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增主键',\n" +
+                "  `vc_task_name` varchar(50) COLLATE utf8_bin NOT NULL COMMENT '任务名称',\n" +
+                "  `vc_task_des` varchar(50) COLLATE utf8_bin NOT NULL COMMENT '任务描述',\n" +
+                "  `is_push` tinyint(1) NOT NULL DEFAULT '1' COMMENT '发送标志 0 不发送 1 发送',\n" +
+                "  `vc_push_cycle` varchar(50) COLLATE utf8_bin NOT NULL COMMENT '推送周期',\n" +
+                "  `vc_push_cycle2` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '推送周期2',\n" +
+                "  `vc_push_time` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '推送时间',\n" +
+                "  `vc_push_emails` varchar(200) COLLATE utf8_bin NOT NULL COMMENT '推送邮箱',\n" +
+                "  `vc_sql` longtext COLLATE utf8_bin NOT NULL COMMENT '查询sql',\n" +
+                "  `vc_result` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '最后一次执行结果',\n" +
+                "  `n_exec_task_id` bigint(20) NOT NULL COMMENT 'hue任务id',\n" +
+                "  `oc_czy` varchar(50) COLLATE utf8_bin NOT NULL COMMENT '操作员',\n" +
+                "  `dt_czrq` datetime NOT NULL COMMENT '操作时间',\n" +
+                "  `oc_yxbz` enum('1','0') COLLATE utf8_bin NOT NULL DEFAULT '1' COMMENT '有效标志',\n" +
+                "  `vc_user` varchar(50) COLLATE utf8_bin NOT NULL COMMENT '用户',\n" +
+                "  `dt_exec_time` datetime DEFAULT NULL COMMENT '最后一次执行时间',\n" +
+                "  PRIMARY KEY (`n_id`)\n" +
+                ") ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COLLATE=utf8_bin\n");
+        System.out.print(codeJavaInfo.getIdField().getFieldName());
     }
 
 }

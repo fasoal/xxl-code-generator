@@ -104,17 +104,35 @@ $(function () {
     initCodeArea();
 
     /**
+     * 下载代码
+     */
+    $('#codeDownload').click(function () {
+        var tableSql = tableSqlIDE.getValue();
+        // var packagePath = document.getElementById('packagePath');
+        console.info(packagePath.value);
+        queryCondition = {
+            "tableSql": tableSql,
+            "packagePath": packagePath.value
+        }
+
+
+        window.location.href=base_url + "/codeDownload?queryCondition="+encodeURIComponent(JSON.stringify(queryCondition));//下载文件
+    });
+
+    /**
      * 生成代码
      */
     $('#codeGenerate').click(function () {
 
         var tableSql = tableSqlIDE.getValue();
-
+        // var packagePath = document.getElementById('packagePath');
+        console.info(packagePath.value);
         $.ajax({
             type : 'POST',
             url : base_url + "/codeGenerate",
             data : {
-                "tableSql" : tableSql
+                "tableSql" : tableSql,
+                "packagePath" : packagePath.value
             },
             dataType : "json",
             success : function(data){

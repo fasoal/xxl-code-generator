@@ -1,15 +1,17 @@
-import com.xxl.conf.admin.core.model.XxlConfNode;
+package ${packagePath}.dao;
+
+import ${packagePath}.model.${classInfo.className};
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
 * ${classInfo.classComment}
 *
-* Created by xuxueli on '${.now?string('yyyy-MM-dd HH:mm:ss')}'.
+* Created by gaoshijia on '${.now?string('yyyy-MM-dd HH:mm:ss')}'.
 */
-@Component
+@Mapper
 public interface ${classInfo.className}Dao {
 
     /**
@@ -20,7 +22,7 @@ public interface ${classInfo.className}Dao {
     /**
     * 删除
     */
-    public int delete(@Param("id") int id);
+    public int delete(@Param("${classInfo.idField.fieldName}") ${classInfo.idField.fieldClass} ${classInfo.idField.fieldName});
 
     /**
     * 更新
@@ -30,18 +32,11 @@ public interface ${classInfo.className}Dao {
     /**
     * Load查询
     */
-    public ${classInfo.className} load(@Param("id") int id);
+    public ${classInfo.className} load(@Param("${classInfo.idField.fieldName}") ${classInfo.idField.fieldClass} ${classInfo.idField.fieldName});
 
     /**
-    * 分页查询Data
+    * 查询Data
     */
-	public List<${classInfo.className}> pageList(@Param("offset") int offset,
-                                                 @Param("pagesize") int pagesize);
-
-    /**
-    * 分页查询Count
-    */
-    public int pageListCount(@Param("offset") int offset,
-                             @Param("pagesize") int pagesize);
+	public List<${classInfo.className}> list();
 
 }

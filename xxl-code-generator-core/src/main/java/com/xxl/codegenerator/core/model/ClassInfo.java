@@ -9,9 +9,10 @@ import java.util.List;
  */
 public class ClassInfo {
 
-    private String tableName;
-    private String className;
+	private String tableName;
+	private String className;
 	private String classComment;
+	private FieldInfo idField;
 
 	private List<FieldInfo> fieldList;
 
@@ -47,4 +48,11 @@ public class ClassInfo {
 		this.fieldList = fieldList;
 	}
 
+	public FieldInfo getIdField() {
+		return idField;
+	}
+
+	public void setIdField(FieldInfo idField) {
+		this.idField = idField;
+	}
 }

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>代码生成平台</title>
+    <title>XXL代码生成平台</title>
 
     <#import "common/common.macro.ftl" as netCommon>
     <@netCommon.commonStyle />
@@ -33,6 +33,7 @@
                             <div class="box-header with-border">
                                 <h4 class="pull-left">表结构信息</h4>
                                 <button type="button" class="btn btn-default btn-xs pull-right" id="codeGenerate" >生成代码</button>
+                                <button type="button" class="btn btn-default btn-xs pull-right" id="codeDownload" >下载代码</button>
                             </div>
                             <div class="box-body">
                                 <ul class="chart-legend clearfix">
@@ -51,7 +52,12 @@ CREATE TABLE `userinfo` (
                                 </ul>
                             </div>
                         </div>
-
+                        <#-- 包路径 -->
+                        <div class="box box-default">
+                            <div class="box-header with-border">
+                                包路径:  <input type="text" id="packagePath" size="50"/>
+                            </div>
+                        </div>
 
                         <#-- 生成代码 -->
                         <div class="nav-tabs-custom">

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="Dao路径.${classInfo.className}Dao">
+<mapper namespace="${packagePath}.dao.${classInfo.className}Dao">
 
-    <resultMap id="${classInfo.className}" type="Model路径.${classInfo.className}" >
+    <resultMap id="${classInfo.className}" type="${packagePath}.model.${classInfo.className}" >
     <#if classInfo.fieldList?exists && classInfo.fieldList?size gt 0>
     <#list classInfo.fieldList as fieldItem >
         <result column="${fieldItem.columnName}" property="${fieldItem.fieldName}" />
@@ -19,11 +19,11 @@
     </#if>
     </sql>
 
-    <insert id="insert" parameterType="Model路径.${classInfo.className}" >
+    <insert id="insert" parameterType="${packagePath}.model.${classInfo.className}" >
         INSERT INTO ${classInfo.tableName} (
         <#if classInfo.fieldList?exists && classInfo.fieldList?size gt 0>
         <#list classInfo.fieldList as fieldItem >
-            <#if fieldItem.columnName != "Id" >
+            <#if fieldItem.columnName != classInfo.idField.columnName >
             `${fieldItem.columnName}`<#if fieldItem_has_next>,</#if>
             </#if>
         </#list>
@@ -32,50 +32,39 @@
         VALUES(
         <#if classInfo.fieldList?exists && classInfo.fieldList?size gt 0>
         <#list classInfo.fieldList as fieldItem >
-        <#if fieldItem.columnName != "Id" >
-            <#if fieldItem.columnName="AddTime" || fieldItem.columnName="UpdateTime" >
-            NOW()<#if fieldItem_has_next>,</#if>
-            <#else>
+        <#if fieldItem.columnName != classInfo.idField.columnName >
             ${r"#{"}${classInfo.className?uncap_first}.${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>
-            </#if>
         </#if>
         </#list>
         </#if>
         )
     </insert>
 
-    <delete id="delete" parameterType="java.util.Map" >
+    <delete id="delete" >
         DELETE FROM ${classInfo.tableName}
-        WHERE `id` = ${r"#{id}"}
+        WHERE ${classInfo.idField.columnName} = ${r"#{"}${classInfo.idField.fieldName}${r"}"}
     </delete>
 
-    <update id="update" parameterType="Model路径.${classInfo.className}" >
+    <update id="update" parameterType="${packagePath}.model.${classInfo.className}" >
         UPDATE ${classInfo.tableName}
         SET
         <#list classInfo.fieldList as fieldItem >
-        <#if fieldItem.columnName != "Id" && fieldItem.columnName != "AddTime" && fieldItem.columnName != "UpdateTime" >
-            ${fieldItem.columnName} = ${r"#{"}${classInfo.className?uncap_first}.${fieldItem.fieldName}${r"}"},
+        <#if fieldItem.columnName != classInfo.idField.columnName>
+            ${fieldItem.columnName} = ${r"#{"}${classInfo.className?uncap_first}.${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>
         </#if>
         </#list>
-            UpdateTime = NOW()
-        WHERE `id` = ${r"#{"}${classInfo.className?uncap_first}.id${r"}"}
+        WHERE ${classInfo.idField.columnName} = ${r"#{"}${classInfo.className?uncap_first}.${classInfo.idField.fieldName}${r"}"}
     </update>
 
 
-    <select id="load" parameterType="java.lang.String" resultMap="${classInfo.className}">
+    <select id="load" resultMap="${classInfo.className}">
         SELECT <include refid="Base_Column_List" />
         FROM ${classInfo.tableName}
-        WHERE `id` = ${r"#{id}"}
+        WHERE ${classInfo.idField.columnName} = ${r"#{"}${classInfo.idField.fieldName}${r"}"}
     </select>
 
-    <select id="pageList" parameterType="java.util.Map" resultMap="${classInfo.className}">
+    <select id="list" resultType="${packagePath}.model.${classInfo.className}" resultMap="${classInfo.className}">
         SELECT <include refid="Base_Column_List" />
-        FROM ${classInfo.tableName}
-        LIMIT ${r"#{offset}"}, ${r"#{pagesize}"}
-    </select>
-
-    <select id="pageListCount" parameterType="java.util.Map" resultType="int">
-        SELECT count(1)
         FROM ${classInfo.tableName}
     </select>
 
